@@ -1,0 +1,11 @@
+[Unit]
+After=mnt.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/systemd-tmpfiles --create /etc/tmpfiles.d/local-storage.conf
+SuccessExitStatus=DATAERR CANTCREAT
+
+[Install]
+WantedBy=multi-user.target

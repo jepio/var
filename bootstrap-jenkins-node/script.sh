@@ -24,6 +24,9 @@ useradd -s /bin/bash -G $groups -m jenkins
 systemctl daemon-reload
 systemctl enable --now azure-tmpdirs
 
+grep -q ^ClientAliveInterval /etc/ssh/sshd_config || echo "ClientAliveInterval 15" >>/etc/ssh/sshd_config
+systemctl restart ssh
+
 (
 umask 0077
 mkdir /home/jenkins/.ssh

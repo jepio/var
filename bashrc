@@ -19,6 +19,8 @@ azure_up() {
 
 fetch_flatcar() {
   local channel=$1
+  local version=${2:-current}
+
   local machine=$(uname -m)
   local arch=
   if [[ ${machine} = "aarch64" ]]; then
@@ -26,7 +28,7 @@ fetch_flatcar() {
   elif [[ ${machine} = "x86_64" ]]; then
     arch=amd64-usr
   fi
-  local base=https://$channel.release.flatcar-linux.net/${arch}/current
+  local base=https://$channel.release.flatcar-linux.net/${arch}/${version}
   wget $base/flatcar_production_qemu.sh
   wget $base/flatcar_production_qemu_image.img.bz2
   chmod +x flatcar_production_qemu.sh
@@ -37,4 +39,11 @@ fetch_alpha() {
 }
 fetch_stable() {
   fetch_flatcar stable
+}
+ct() {
+  docker run -i --rm ghcr.io/flatcar-linux/ct "$@"
+}
+
+sshu() {
+  ssh -o StrictHostKeyChecking=false -o UserKnownHostsFile=/dev/null "$@"
 }

@@ -17,6 +17,25 @@ azure_up() {
     "https://jepio.blob.core.windows.net/flatcar-arm64/$prefix$file?$SAS_TOKEN" | cat
 }
 
+fetch_flatcar_uefi() {
+  local channel=$1
+  local version=${2:-current}
+
+  local machine=$(uname -m)
+  local arch=
+  if [[ ${machine} = "aarch64" ]]; then
+    arch=arm64-usr
+  elif [[ ${machine} = "x86_64" ]]; then
+    arch=amd64-usr
+  fi
+  local base=https://$channel.release.flatcar-linux.net/${arch}/${version}
+  wget $base/flatcar_production_qemu_uefi.sh
+  wget $base/flatcar_production_qemu_uefi_image.img.bz2
+  wget $base/flatcar_production_qemu_uefi_efi_vars.fd
+  wget $base/flatcar_production_qemu_uefi_efi_code.fd
+  chmod +x flatcar_production_qemu_uefi.sh
+}
+
 fetch_flatcar() {
   local channel=$1
   local version=${2:-current}

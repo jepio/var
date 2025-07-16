@@ -100,3 +100,11 @@ az_cvm() {
 butane() {
   docker run --rm -i quay.io/coreos/butane "$@"
 }
+
+dockercwd() {
+  docker run -it --rm -v $PWD:$PWD -w $PWD "$@"
+}
+
+oaitokenexport() {
+  export AZURE_OPENAI_API_KEY=$(az account get-access-token --scope https://cognitiveservices.azure.com/.default | jq -r .accessToken)
+}

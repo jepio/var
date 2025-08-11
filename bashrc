@@ -107,4 +107,14 @@ dockercwd() {
 
 oaitokenexport() {
   export AZURE_OPENAI_API_KEY=$(az account get-access-token --scope https://cognitiveservices.azure.com/.default | jq -r .accessToken)
+  #export OPENAI_API_KEY="${AZURE_OPENAI_API_KEY}"
+}
+
+rebuild_codex() {
+  pushd ~/git/openai/codex/codex-rs
+  cargo build --release
+  pushd target/release
+  sudo find -maxdepth 1 -type f -executable -exec install -m 0755 -o root -g root -t /usr/local/bin/ {} \;
+  popd
+  popd
 }
